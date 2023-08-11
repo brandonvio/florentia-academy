@@ -1,3 +1,4 @@
+# This is the main template for the Florentia API
 provider "aws" {
   region = "us-west-2"
 }
@@ -11,7 +12,6 @@ terraform {
     encrypt        = true
   }
 }
-
 
 data "terraform_remote_state" "main" {
   backend = "s3"
@@ -48,5 +48,7 @@ module "florentia_api_api_gateway" {
   source               = "./api-gateway"
   lambda_invoke_arn    = module.florentia_api_lambda.florentia_api_lambda_invoke_arn
   lambda_function_name = module.florentia_api_lambda.florentia_api_lambda_function_name
+  ssl_certificate_arn  = data.terraform_remote_state.main.outputs.west_ssl_certifcate_arn
+  zone_id              = data.terraform_remote_state.main.outputs.zone_id
   depends_on           = [module.florentia_api_lambda]
 }

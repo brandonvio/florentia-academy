@@ -10,6 +10,16 @@ variable "lambda_function_name" {
   type        = string
 }
 
+variable "ssl_certificate_arn" {
+  description = "SSL Certificate ARN"
+  type        = string
+}
+
+variable "zone_id" {
+  description = "Zone ID"
+  type        = string
+}
+
 resource "aws_api_gateway_rest_api" "florentia_api" {
   name        = "florentia_api"
   description = "API for the Florentia Academy enrollment system"
@@ -80,36 +90,36 @@ output "base_url" {
 
 # ## DNS and SSL
 # # Add a custom domain name to API Gateway
-# resource "aws_apigatewayv2_domain_name" "api_gateway_domain" {
-#   domain_name = "api.forentia.academy"
-#   domain_name_configuration {
-#     certificate_arn = data.terraform_remote_state.ssl.outputs.certificate_arn
-#     endpoint_type   = "REGIONAL"
-#     security_policy = "TLS_1_2"
-#   }
-# }
+resource "aws_apigatewayv2_domain_name" "api_gateway_domain" {
+  domain_name = "api.florentia.academy"
+  domain_name_configuration {
+    certificate_arn = var.ssl_certificate_arn
+    endpoint_type   = "REGIONAL"
+    security_policy = "TLS_1_2"
+  }
+}
 
-# # Create an API mapping to map the custom domain to the API
-# resource "aws_apigatewayv2_api_mapping" "api_mapping" {
-#   api_id      = aws_api_gateway_rest_api.florentia_api.id
-#   domain_name = aws_apigatewayv2_domain_name.api_gateway_domain.domain_name
-#   stage       = aws_api_gateway_deployment.florentia_api.stage_name
-# }
+# Create an API mapping to map the custom domain to the API
+resource "aws_apigatewayv2_api_mapping" "api_mapping" {
+  api_id      = aws_api_gateway_rest_api.florentia_api.id
+  domain_name = aws_apigatewayv2_domain_name.api_gateway_domain.domain_name
+  stage       = aws_api_gateway_deployment.florentia_api.stage_name
+}
 
-# # Create a Route53 record to point to the custom domain
-# resource "aws_route53_record" "api_gateway_record" {
-#   zone_id = data.terraform_remote_state.dns.outputs.zone_id
-#   name    = aws_apigatewayv2_domain_name.api_gateway_domain.domain_name
-#   type    = "A"
+# Create a Route53 record to point to the custom domain
+resource "aws_route53_record" "api_gateway_record" {
+  zone_id = var.zone_id
+  name    = aws_apigatewayv2_domain_name.api_gateway_domain.domain_name
+  type    = "A"
 
-#   alias {
-#     name                   = aws_apigatewayv2_domain_name.api_gateway_domain.domain_name_configuration.0.target_domain_name
-#     zone_id                = aws_apigatewayv2_domain_name.api_gateway_domain.domain_name_configuration.0.hosted_zone_id
-#     evaluate_target_health = false
-#   }
-# }
+  alias {
+    name                   = aws_apigatewayv2_domain_name.api_gateway_domain.domain_name_configuration.0.target_domain_name
+    zone_id                = aws_apigatewayv2_domain_name.api_gateway_domain.domain_name_configuration.0.hosted_zone_id
+    evaluate_target_health = false
+  }
+}
 
-# # Replace the base_url output with the custom domain name
-# output "base_url_with_domain" {
-#   value = aws_apigatewayv2_domain_name.api_gateway_domain.domain_name
-# }
+# Replace the base_url output with the custom domain name
+output "base_url_with_domain" {
+  value = aws_apigatewayv2_domain_name.api_gateway_domain.domain_name
+}

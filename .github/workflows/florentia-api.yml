@@ -1,0 +1,36 @@
+name: 'lvrgd-services-user-api'
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - florentia-api/**
+
+jobs:
+  build-and-deploy:
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+      GITHUB_SHA: ${{ github.event.after }}
+
+    name: 'build-and-deploy'
+    runs-on: ubuntu-latest
+
+    steps:
+        - uses: actions/checkout@v3
+
+        - name: Setup Terraform
+          uses: hashicorp/setup-terraform@v1
+          with:
+            terraform_version: 1.0.3
+        
+        - name: build and push to S3
+          working-directory: florentia-api/cmd/florentia-api
+          run: make push
+
+        - name: user-api - apply terraform
+          working-directory: florentia-api/terraform
+          run: make deploy
+        

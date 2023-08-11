@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -32,7 +33,12 @@ func Helloworld(g *gin.Context) {
 	g.JSON(http.StatusOK, fmt.Sprintf("hello world! it is %s", time.Now().Format(time.RFC3339)))
 }
 
+func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	return ginLambda.ProxyWithContext(ctx, request)
+}
+
 func main() {
+	log.Println("starting up gin server for florentia-api")
 	g := gin.Default()
 	docs.SwaggerInfo.BasePath = "/api/v1"
 
@@ -49,13 +55,11 @@ func main() {
 
 	env := os.Getenv("GIN_MODE")
 	if env == "release" {
+		log.Println("starting up gin lambda for florentia-api")
 		ginLambda = ginadapter.New(g)
 		lambda.Start(Handler)
 	} else {
+		log.Println("starting up gin server for florentia-api")
 		g.Run(":8080")
 	}
-}
-
-func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	return ginLambda.ProxyWithContext(ctx, request)
 }
