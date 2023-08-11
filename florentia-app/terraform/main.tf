@@ -33,6 +33,7 @@ module "florentia_cloudfront" {
   website_bucket_domain_name = module.florentia_website_bucket.website_bucket_domain_name
   ssl_certificate_arn        = data.terraform_remote_state.main.outputs.east_ssl_certifcate_arn
   aws_region                 = data.terraform_remote_state.main.outputs.aws_region
+  zone_id                    = data.terraform_remote_state.main.outputs.zone_id
   depends_on                 = [module.florentia_website_bucket]
 }
 

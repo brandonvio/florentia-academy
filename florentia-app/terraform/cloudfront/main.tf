@@ -16,6 +16,9 @@ variable "aws_region" {
   type = string
 }
 
+variable "zone_id" {
+  type = string
+}
 
 resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
   comment = "access-identity-home-florentia-academy"
@@ -67,13 +70,13 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
 }
 
-# resource "aws_route53_record" "root" {
-#   name    = "lvrgd.ai"
-#   type    = "A"
-#   zone_id = data.terraform_remote_state.dns.outputs.zone_id
-#   alias {
-#     name                   = aws_cloudfront_distribution.s3_distribution.domain_name
-#     zone_id                = aws_cloudfront_distribution.s3_distribution.hosted_zone_id
-#     evaluate_target_health = false
-#   }
-# }
+resource "aws_route53_record" "root" {
+  name    = "florentia.academy"
+  type    = "A"
+  zone_id = var.zone_id
+  alias {
+    name                   = aws_cloudfront_distribution.s3_distribution.domain_name
+    zone_id                = aws_cloudfront_distribution.s3_distribution.hosted_zone_id
+    evaluate_target_health = false
+  }
+}

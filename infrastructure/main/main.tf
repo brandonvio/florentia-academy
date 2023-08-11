@@ -34,6 +34,10 @@ output "west_ssl_certifcate_arn" {
   value = module.florentia_ssl_west.certificate_arn
 }
 
+output "zone_id" {
+  value = module.florentia_dns.zone_id
+}
+
 output "aws_region" {
   value = "us-west-2"
 }
