@@ -15,3 +15,13 @@ terraform {
 module "florentia_dns" {
   source = "./dns"
 }
+
+module "florentia_ssl" {
+  source  = "./ssl-east-1"
+  zone_id = module.florentia_dns.zone_id
+}
+
+module "florentia_ssl_west" {
+  source  = "./ssl-west-2"
+  zone_id = module.florentia_dns.zone_id
+}
