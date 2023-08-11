@@ -26,6 +26,16 @@ module "florentia_ssl_west" {
   zone_id = module.florentia_dns.zone_id
 }
 
+# import the s3 module
+module "florentia_s3" {
+  source = "./s3"
+}
+
+# output the s3 bucket name
+output "florentia_lambda_functions_bucket_name" {
+  value = module.florentia_s3.florentia_lambda_functions_bucket_name
+}
+
 output "east_ssl_certifcate_arn" {
   value = module.florentia_ssl.certificate_arn
 }
