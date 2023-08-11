@@ -16,6 +16,11 @@ resource "aws_dynamodb_table" "florentia_academy_db" {
     type = "S"
   }
 
+  attribute {
+    name = "data"
+    type = "S"
+  }
+
   tags = {
     Name = "florentia_academy_db"
   }
