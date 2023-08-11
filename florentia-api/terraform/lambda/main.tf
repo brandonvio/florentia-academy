@@ -32,6 +32,12 @@ resource "aws_lambda_function" "florentia_api" {
   handler       = "florentia-api-exe"
   runtime       = "go1.x"
   role          = var.lambda_exec_arn
+  environment {
+    variables = {
+      REGION   = var.region
+      GIN_MODE = "release"
+    }
+  }
 }
 
 resource "aws_cloudwatch_log_group" "lambda_log_group" {

@@ -1,4 +1,4 @@
-name: 'lvrgd-services-user-api'
+name: 'florentia-api-workflow'
 
 on:
   push:
