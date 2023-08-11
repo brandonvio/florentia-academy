@@ -52,7 +52,3 @@ module "florentia_api_api_gateway" {
   zone_id              = data.terraform_remote_state.main.outputs.zone_id
   depends_on           = [module.florentia_api_lambda]
 }
-
-module "florentia_api_dynamodb" {
-  source = "./dynamodb"
-}
