@@ -38,7 +38,7 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 }
 
 func main() {
-	log.Println("starting up gin server for florentia-api")
+	log.Println("starting up ##GIN## __florentia-api__")
 	g := gin.Default()
 	docs.SwaggerInfo.BasePath = "/api/v1"
 
@@ -54,12 +54,13 @@ func main() {
 	http.ListenAndServe(":8080", g)
 
 	env := os.Getenv("GIN_MODE")
-	if env == "release" {
-		log.Println("starting up gin lambda for florentia-api")
-		ginLambda = ginadapter.New(g)
-		lambda.Start(Handler)
-	} else {
+	if env == "local" {
 		log.Println("starting up gin server for florentia-api")
 		g.Run(":8080")
+
+	} else {
+		log.Println("starting up gin ##LAMBDA## for __florentia-api__")
+		ginLambda = ginadapter.New(g)
+		lambda.Start(Handler)
 	}
 }
