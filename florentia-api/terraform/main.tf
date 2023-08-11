@@ -53,6 +53,6 @@ module "florentia_api_api_gateway" {
   depends_on           = [module.florentia_api_lambda]
 }
 
-# module "florentia_api_dynamodb" {
-#   source = "./dynamodb"
-# }
+module "florentia_api_dynamodb" {
+  source = "./dynamodb"
+}
