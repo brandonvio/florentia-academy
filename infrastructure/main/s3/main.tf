@@ -2,7 +2,7 @@
 
 # create s3 bucket to store lambda zip deploymnet package
 resource "aws_s3_bucket" "florentia_lambda_functions" {
-  bucket = "florentia-lambda-function"
+  bucket = "florentia-lambda-functions"
 }
 
 # export the bucket arn so it can be used by other modules

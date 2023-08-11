@@ -12,6 +12,8 @@ terraform {
   }
 }
 
+data "aws_caller_identity" "current" {}
+
 module "florentia_dns" {
   source = "./dns"
 }
@@ -31,6 +33,10 @@ module "florentia_s3" {
   source = "./s3"
 }
 
+output "aws_region" {
+  value = "us-west-2"
+}
+
 # output the s3 bucket name
 output "florentia_lambda_functions_bucket_name" {
   value = module.florentia_s3.florentia_lambda_functions_bucket_name
@@ -48,6 +54,6 @@ output "zone_id" {
   value = module.florentia_dns.zone_id
 }
 
-output "aws_region" {
-  value = "us-west-2"
+output "account_id" {
+  value = data.aws_caller_identity.current.account_id
 }
