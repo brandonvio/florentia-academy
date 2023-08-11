@@ -25,3 +25,15 @@ module "florentia_ssl_west" {
   source  = "./ssl-west-2"
   zone_id = module.florentia_dns.zone_id
 }
+
+output "east_ssl_certifcate_arn" {
+  value = module.florentia_ssl.certificate_arn
+}
+
+output "west_ssl_certifcate_arn" {
+  value = module.florentia_ssl_west.certificate_arn
+}
+
+output "aws_region" {
+  value = "us-west-2"
+}

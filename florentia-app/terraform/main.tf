@@ -1,3 +1,5 @@
+# main.tf
+# This template create 
 provider "aws" {
   region = "us-west-2"
 }
@@ -12,7 +14,7 @@ terraform {
   }
 }
 
-data "terraform_remote_state" "main_state" {
+data "terraform_remote_state" "main" {
   backend = "s3"
   config = {
     bucket = "florentia-academy-terraform-state"
@@ -23,6 +25,15 @@ data "terraform_remote_state" "main_state" {
 
 module "florentia_website_bucket" {
   source = "./website-bucket"
+}
+
+module "florentia_cloudfront" {
+  source                     = "./cloudfront"
+  website_bucket_id          = module.florentia_website_bucket.website_bucket_id
+  website_bucket_domain_name = module.florentia_website_bucket.website_bucket_domain_name
+  ssl_certificate_arn        = data.terraform_remote_state.main.outputs.east_ssl_certifcate_arn
+  aws_region                 = data.terraform_remote_state.main.outputs.aws_region
+  depends_on                 = [module.florentia_website_bucket]
 }
 
 # data "terraform_remote_state" "ssl" {
