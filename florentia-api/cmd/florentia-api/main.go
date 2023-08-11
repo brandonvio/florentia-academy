@@ -52,13 +52,12 @@ func main() {
 	// http.ListenAndServe(":8080", g)
 
 	env := os.Getenv("GIN_MODE")
-	if env == "local" {
-		log.Println("starting up gin server for florentia-api")
-		g.Run(":8080")
-
-	} else {
-		log.Println("starting up gin ##LAMBDA## for __florentia-api__")
+	if env == "release" {
+		log.Println("starting up gin ##LAMBDA## for florentia-api")
 		ginLambda = ginadapter.New(g)
 		lambda.Start(Handler)
+	} else {
+		log.Println("starting up gin ##SERVER## for florentia-api")
+		g.Run(":8090")
 	}
 }
