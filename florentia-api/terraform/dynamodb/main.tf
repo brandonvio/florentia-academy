@@ -1,10 +1,12 @@
 # Terraform module for creating a DynamoDB table for the Course Enrollment service.
 
 resource "aws_dynamodb_table" "florentia_academy_db" {
-  name         = "florentia_academy_db"
-  billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "pk"
-  range_key    = "sk"
+  name           = "florentia_academy_db"
+  billing_mode   = "PROVISIONED"
+  read_capacity  = 15
+  write_capacity = 15
+  hash_key       = "pk"
+  range_key      = "sk"
 
   attribute {
     name = "pk"
@@ -13,11 +15,6 @@ resource "aws_dynamodb_table" "florentia_academy_db" {
 
   attribute {
     name = "sk"
-    type = "S"
-  }
-
-  attribute {
-    name = "data"
     type = "S"
   }
 
