@@ -13,8 +13,6 @@ import (
 	ginadapter "github.com/awslabs/aws-lambda-go-api-proxy/gin"
 	"github.com/brandonvio/florentia.academy/cmd/florentia-api/docs"
 	"github.com/gin-gonic/gin"
-	swaggerfiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 var ginLambda *ginadapter.GinLambda
@@ -50,8 +48,8 @@ func main() {
 		}
 	}
 
-	g.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
-	http.ListenAndServe(":8080", g)
+	// g.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	// http.ListenAndServe(":8080", g)
 
 	env := os.Getenv("GIN_MODE")
 	if env == "local" {
